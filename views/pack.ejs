@@ -1,0 +1,105 @@
+<%- include('modules/head') -%>
+<%- include('./modules/mobile-nav') -%>
+
+  <div class="frame" style="width: 100%; height: 100%;">
+    <%- include('./modules/sidebar') -%>
+
+
+    <!-- MAIN BEGIN -->
+    <div class="main">
+      <section data-aos="fade-in">
+        <h1 class="p-2"><%= pack.icon %> <%= pack.name %></h1>
+        <div class="pack-operations">
+          <a href="" role="button" id="membershower" ><%= pack.members.length %> MEMBERS</a>
+          <a href="<%= pack._id %>/invite" >Invite</a>
+          <% if (pack.owner == user._id) {%>
+              <a href="<%= pack._id %>/settings">Pack Settings</a>
+          <%}%>
+
+
+          <a href="<%= pack._id %>/leave">Leave Pack</a>
+        </div>
+        <div class="pack-description p-2 mt-3">
+          <h5>Pack Description</h5>
+          <p><%= pack.description %></p>
+        </div>
+        <div class="footer p-2"><small>Owner: <% if (packOwner) {%>	<%= packOwner.username %><% } else { %> deleted user <%}%></small></div>
+        <% if (typeof error !== 'undefined') { %>
+          <div class="alert alert-danger"><%= error %></div>
+        <%  } %>
+        <hr class="w-100">
+      </section>
+      <div class="modal fade modal-members" id="members" tabindex="-1" role="dialog" aria-labelledby="members" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3>List of members</h3>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <ul>
+                <li>
+                  <table class="table table-sm table-hover table-borderless">
+                    <tbody class="member-list-table">
+                      <tr data-user-id="1">
+                        <td>Mark</td>
+                        <td align="right"><a href="">mark@email.com</a></td>
+                      </tr>
+                      <tr data-user-id="2">
+                        <td>Mark</td>
+                        <td align="right"><a href="">mark@email.com</a></td>
+                      </tr>
+                      <tr data-user-id="3">
+                        <td>Mark</td>
+                        <td align="right"><a href="">mark@email.com</a></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <section class="mt-0 pt-0">
+        <!-- FEED BEGIN -->
+          <%- include('./modules/feed', {writer: true, type: "pack"}) -%>
+        <!-- FEED End -->
+
+      </section>
+      <%- include('./modules/footer') -%>
+    </div>
+    <!-- MAIN END -->
+
+  </div>
+
+<%- include('./modules/feedAjax') -%>
+<%- include('./modules/postWritingAjax') -%>
+<%- include('./modules/scripts') -%>
+  <script type="text/javascript">
+    $(document).ready(function(){
+          $('a#membershower').on('click', function(e){
+            e.preventDefault();
+            $.ajax({
+                url: '/member-query/<%= pack._id %>',
+                method: 'GET',
+                }).done(function(res) {
+                  $('tbody.member-list-table').empty();
+                  jQuery.each(res, function(index, item) {
+                      var html = '<tr><td>' + item.username + '</td><td align="right"><a href="">'+item.email+'</a></td></tr>';
+                      $('tbody.member-list-table').append(html);
+                  });
+
+                    $('#members').modal('toggle');
+          });
+          });
+    });
+  </script>
+</body>
+
+</html>

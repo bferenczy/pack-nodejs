@@ -1,0 +1,146 @@
+<%- include('./modules/head') -%>
+<%- include('./modules/mobile-nav') -%>
+
+
+  <div class="frame" style="width: 100%; height: 100%;">
+    <%- include('./modules/sidebar') -%>
+
+
+    <!-- MAIN BEGIN -->
+    <div class="main">
+      <section>
+        <a onclick="window.history.back()" class="back-btn">Go back</a>
+        <h1><%= pack.icon %> <%= pack.name %></h1>
+        <% if (typeof error !== 'undefined') { %>
+          <div class="alert alert-danger"><%= error %></div>
+        <%  } %>
+      </section>
+      <section class="mt-0 pt-0">
+        <div class="feed">
+        <div class="card" data-aos="fade-up">
+          <form method="POST">
+          <div class="card-header d-flex">
+            <h3>The Basics</h3>
+
+            <input type="submit" style="margin-left: auto; border: none;" class="save-changes" value="Save">
+          </div>
+          <div class="card-body">
+
+              <div class="form-group mb-4">
+                <label for="packname">You can rename your pack here.</label>
+                <input type="text" class="form-control" name="name" id="packname" placeholder="Pack name" value="<%= pack.name %>" >
+              </div>
+              <div class="form-group mb-4">
+                <label for="icon">Change the icon of the pack.</label>
+                <input type="hidden" id="icon" name="icon" value="<%= pack.icon %>">
+                <div style="display: flex; align-items: center;">
+                  <div class="chosen-icon"><%= pack.icon %></div>
+                    <div class="icon-selector">
+                      <p>👟</p>
+                      <p>💻</p>
+                      <p>🍊</p>
+                      <p>🍾</p>
+                      <p>🌊</p>
+                      <p>❤️</p>
+                      <p>⛄️</p>
+                      <p>🥕</p>
+                      <p>💰</p>
+                      <p>🎉</p>
+                      <p>🎓</p>
+                      <p>🐶</p>
+                      <p>🌈</p>
+                      <p>🍔</p>
+                      <p>⚽️</p>
+                      <p>🏀</p>
+                      <p>💩</p>
+                      <p>🧠</p>
+                    </div>
+                </div>
+              </div>
+
+              <div class="form-group mb-4">
+                <label for="packdesc">Change pack description.</label>
+                <textarea class="form-control pack-desc-ta" rows="4" name="description" id="packdesc" placeholder="Write pack description here" required><%= pack.description %></textarea>
+              </div>
+
+            </form>
+          </div>
+        </div>
+
+      <div class="card" data-aos="fade-up">
+        <div class="card-header d-flex">
+          <h3>Member Management</h3>
+        </div>
+        <div class="card-body">
+            <div class="form-group mb-4">
+              <% if (members.length == 1) { %>
+                  <p style="opacity: 0.6">There are no members in the group yet.</p>
+                  <a href="/pack/<%= pack._id %>/invite">Invite some!</a>
+              <% } else { %>
+              <label>Remove current members.</label>
+              <div class="member-holder">
+                <% members.forEach(function(member){
+                  if(member._id != user._id) {%>
+                  <div class="member" data-memberid="<%= member._id %>"><p><%= member.username %> - <a href="mailto:johhny@doe.com"><%= member.email %></a></p></div>
+                <% }}); %>
+              </div>
+              <%}%>
+            </div>
+        </div>
+        </div>
+
+        <div class="card" data-aos="fade-up">
+          <div class="card-header d-flex">
+            <h3>Ownership</h3>
+          </div>
+          <div class="card-body">
+            <form class="" action="/<%= pack._id %>/change-owner" method="POST">
+
+              <div class="form-group mb-4">
+                <label>You can transfer your Pack ownership to an other member. You will not have access to the pack settings once you did so.</label>
+                <input type="text" class="form-control email-adder" name="transfer_email" placeholder="Type email here!" >
+                <button type="submit" class="btn btn-primary d-block mt-2">Transfer Ownership</button>
+              </div>
+              </form>
+              <form class="" action="/<%= pack._id %>/delete" method="POST">
+              <div class="form-group mb-4">
+                <label>By pressing this button, you delete the pack and all of its posts.</label>
+                <button type="submit" class="btn btn-danger d-block">Delete Pack</button>
+              </div>
+            </form>
+          </div>
+          </div>
+        </div>
+      </section>
+      <%- include('./modules/footer') -%>
+    </div>
+    </div>
+    <!-- MAIN END -->
+
+  </div>
+
+
+<%- include('./modules/scripts') -%>
+  <script type="text/javascript">
+    $(document).ready(function(){
+        $(document).on("click", 'div.member-holder > div.member', function(e) {
+            var memberId = $(this).attr("data-memberid");
+            $.ajax({
+                url: '/<%= pack._id %>/remove-member',
+                method: 'POST',
+                cache: false,
+                data: { packid: "<%= pack._id %>", memberid: memberId },
+                success: function(data){
+                      console.log("Member removed.");
+                },
+                error: function(data){
+                  alert("Could not remove member!");
+                }
+          });
+          });
+    });
+  </script>
+  </script>
+</body>
+
+</html>

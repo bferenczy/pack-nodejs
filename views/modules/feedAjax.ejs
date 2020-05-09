@@ -1,0 +1,130 @@
+<script type="text/javascript">
+  let USERID = "<%= user._id%>";
+  function sendReply(commentid, text) {
+    $.ajax({
+        url: '/reply',
+        method: 'POST',
+        cache: false,
+        data: { commentid: commentid, text: text },
+        success: function(data){
+              console.log("Comment posted.");
+              makeReplyDiv(commentid, data, text);
+        },
+        error: function(data){
+          alert("Could not post comment!");
+        }
+    });
+  }
+  function makeReplyDiv(commentid, data, text) {
+    let newcomment = '<div class="comment-reply"  data-reply-id="' + data + '"><div class="comment-header"><p class="username"><%= user.username %></p> <small class="date">' +
+      new Date().toLocaleDateString() + '</small></div><p class="text">' + text + '</p></div>';
+    $(newcomment).insertAfter($('div.comment-reply[data-comment-id=' + commentid + ']').last()).toggle();
+    $(this).val('');
+
+    let post_id = $('div.comment-reply[data-comment-id=' + commentid + ']').attr("data-post-id");
+    let comment_btn = $('article.post[data-post-id="'+post_id+'"]').find('button.comments');
+    console.log(comment_btn);
+    let comm_text= comment_btn.html();
+    let split = comm_text.split(" ");
+    let comm=split[0];
+    comm++;
+    comment_btn.html(comm + " comments");
+
+    let reply_indicator = $('a#show-replies[data-comment-id=' + commentid + '] small');
+    console.log(reply_indicator);
+    comm_text= reply_indicator.html();
+    split = comm_text.split(" ");
+    comm=split[0];
+    comm++;
+    reply_indicator.html(comm + " replies");
+  }
+  function makeComment(postid, text) {
+    $.ajax({
+        url: '/comment',
+        method: 'POST',
+        cache: false,
+        data: { postid: postid, text: text },
+        success: function(data){
+              console.log("Comment posted.");
+              makeCommentDiv(postid, data, text);
+        },
+        error: function(data){
+          alert("Could not post comment!");
+        }
+    });
+  }
+  function makeCommentDiv(id, locmin, text){
+      let newcomment = '<div class="comment" data-post-id="' + id + '" data-comment-id="' + locmin + '"><div class="comment-header"><p class="username"><%=user.username%></p> <small class="date">' + new Date().toLocaleDateString() + '</small>  </div><p class="text">' + text + '</p><a class="" data-comment-id="' + locmin + '" id="show-replies"><small>0 replies</small></a></div>'
+      $(newcomment).insertAfter($('div.comment-write[data-post-id="' + id + '"][data-comment-id="0"]'));
+      let comment_btn = $('article.post[data-post-id="'+id+'"]').find('button.comments');
+      let comm_text= comment_btn.html();
+      let split = comm_text.split(" ");
+      let comm=split[0];
+      comm++;
+      comment_btn.html(comm + " comments");
+
+  }
+
+  function likePost(postid, add) {
+    $.ajax({
+        url: '/like',
+        method: 'POST',
+        cache: false,
+        data: { postid: postid },
+        success: function(data){
+              console.log("Post liked.");
+              addLike(postid, add);
+        },
+        error: function(data){
+          alert("Could not like post!");
+        }
+    });
+  }
+  function addLike(postid, add){
+    let like_btn = $('article.post[data-post-id="'+postid+'"]').find('button.likes');
+    let like_text= like_btn.html();
+    let split = like_text.split(" ");
+    let likes=split[0];
+
+    if(add){
+      $(".modal-like[data-post-id="+postid+"]").find('tr[data-user-id=<%= user._id %>]').remove();
+      likes--;
+    } else {
+        let newtr = '<tr data-user-id=<%= user._id %>><td><%= user.username %></td><td align="right"><a href=""><%= user.email %></a></td></tr>';
+        let table = ($(".modal-like[data-post-id="+postid+"]").find('tbody'));
+        table.append(newtr);
+        likes++;
+    }
+
+    like_btn.html(likes + " likes");
+
+  }
+  function editPost(postid, text) {
+    $.ajax({
+        url: '/edit-post',
+        method: 'POST',
+        cache: false,
+        data: { postid: postid, text: text },
+        success: function(data){
+              console.log("Post edited.");
+        },
+        error: function(data){
+          alert("Could not edit post!");
+        }
+    });
+  }
+  function deletePost(postid) {
+    $.ajax({
+        url: '/delete-post',
+        method: 'POST',
+        cache: false,
+        data: { postid: postid },
+        success: function(data){
+              console.log("Post deleted.");
+        },
+        error: function(data){
+          alert("Could not delete post!");
+        }
+    });
+  }
+</script>

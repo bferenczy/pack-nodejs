@@ -1,0 +1,57 @@
+<%- include('./modules/head') -%>
+
+  <header>
+    <div class="mobile-nav">
+      <a href="/dashboard"><img src="img/logo.png" alt="Packs logo" style="width: 30px; height: 30px;"></a>
+      <i class="fas fa-ellipsis-h menu-icon" style=""></i>
+    </div>
+  </header>
+
+  <div class="frame" style="width: 100%; height: 100%;">
+    <%- include('./modules/sidebar') -%>
+
+    <!-- MAIN BEGIN -->
+    <div class="main">
+      <section>
+        <a onclick="window.history.back()" class="back-btn">Go back</a>
+        <h1><%= pack.icon %> <%= pack.name %> - Invite new people </h1>
+
+      </section>
+      <section class="mt-0 pt-0">
+          <form method="POST">
+      <div class="card" data-aos="fade-up">
+        <div class="card-header d-flex">
+          <h3>Invitation</h3>
+
+        </div>
+        <div class="card-body">
+
+            <div class="form-group mb-4">
+              <label>Invite some people! Type in an email address, then press Enter, so you can add more.</label>
+              <input type="text" class="form-control email-adder" placeholder="E-mail" >
+            </div>
+            <input type="hidden" name="emails" id="emails" value="[]">
+            <div class="form-group mb-4">
+              <label>Currently on your list:</label>
+              <div class="email-holder">
+              </div>
+            </div>
+        </div>
+        </div>
+      <button type="submit" class="btn btn-primary w-100" name="add">Send invitations!</button>
+
+</form>
+      </section>
+      <%- include('./modules/footer') -%>
+    </div>
+    </div>
+    <!-- MAIN END -->
+
+  </div>
+
+
+<%- include('./modules/scripts') -%>
+  </script>
+</body>
+
+</html>

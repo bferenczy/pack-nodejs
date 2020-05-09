@@ -1,0 +1,29 @@
+<script type="text/javascript">
+function sendPost(element){
+  var text = $("textarea.send-post").val()
+  $.ajax({
+      url: '/<%= pack.id %>/new-post',
+      method: 'POST',
+      cache: false,
+      data: { text: text },
+      success: function(data){
+            console.log("Post created.");
+            createPostDiv(data, text);
+      },
+      error: function(data){
+        alert("Could not create post!");
+      }
+})};
+function createPostDiv(id, text) {
+
+  $('div.no-posts').hide();
+
+  let dt = new Date();
+  let time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+
+  let newpost = '<article class="post" data-aos="fade-up" data-post-id="'+id+'" role="button" data-toggle="modal" data-target="#comments-'+id+'"><header><p class="poster text-primary"><%= user.username %></p><p class="date">'+time+'</p></header><p class="post-text">'+text+'</p><footer><button type="button" class="modal-link likes" data-toggle="modal" data-target="#likes-'+id+'">0 likes</button><button type="button" class="modal-link comments" data-toggle="modal" data-target="#comments-'+id+'">0 comments</button><p style="margin: 0; margin-left: auto;"><a href="" class="modal-link edit">Edit</a><a href="" class="modal-link" id="delete-post">Delete</a></p></footer></article></a><div class="modal fade modal-like" data-post-id="'+id+'" id="likes-'+id+'" tabindex="-1" role="dialog" aria-labelledby="likes-'+id+'" aria-hidden="true"><div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document"><div class="modal-content"><div class="modal-header"><h3>Likes</h3><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div><div class="modal-body"><ul><li><table class="table table-sm table-hover table-borderless"><tbody></tbody></table></li></ul></div></div></div></div><div class="modal fade modal-comment" data-post-id="'+id+'" id="comments-'+id+'" tabindex="-1" role="dialog" aria-labelledby="comments-'+id+'" aria-hidden="true"><div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document"><div class="modal-content"><div class="modal-header"><h3>Comments</h3><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div><div class="modal-body p-0"><div class="comment comment-write" data-post-id="'+id+'" data-comment-id="0"><div class="comment-header"><small>Commenting on post...</small></div><textarea class="form-control post-comment" id="reply" placeholder="Write your comment here" required></textarea></div></div></div></div></div>';
+
+  $(newpost).insertAfter($('div.post-writer').last());
+
+}
+</script>

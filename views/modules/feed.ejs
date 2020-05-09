@@ -1,0 +1,126 @@
+<div class="feed">
+  <% if (writer == true) { %>
+    <div class="post-writer" data-aos="fade-up">
+      <header class="d-flex"><h3>Post something</h3><i class="send-post" style="margin-left: auto;">Send</i></header>
+      <textarea class="form-control send-post" id="reply" placeholder="What would you like to say, <%= user.username %>?" required></textarea>
+
+    </div>
+  <%}%>
+  <% if((typeof posts == 'undefined' || posts.length == 0) && 0< packs.length ) { %>
+    <div class="jumbotron no-posts" style="background-color: #f2f2f2 !important">
+      <h2 style="font-weight: 400;">We have no posts to show 😞</h2>
+      <p class="lead">There aren't any posts to show here. Post something to break the silence!</p>
+    </div>
+    <%}%>
+  <% if(typeof posts !== 'undefined') { posts.forEach(function(post){ %>
+    <!-- POST BEGIN -->
+    <article class="post" data-post-id="<%= post.id %>" role="button" data-toggle="modal" data-target="#comments-<%= post.id %>" data-aos="fade-up">
+
+      <% if (type == 'dash') { %>
+        <header>
+          <p class="poster"><% if (post.user) { %> <%= post.user.username %><%} else {%>deleted user<%}%><a href="/pack/<%= post.pack._id %>" class="pack_id"> in <%= post.pack.name %></a></p>
+          <p class="date"><%= post.date %></p>
+        </header>
+      <%}%>
+
+      <% if (type == 'pack') { %>
+        <header>
+          <p class="poster text-primary"><% if (post.user) { %> <%= post.user.username %><%} else {%>deleted user<%}%></p>
+          <p class="date"><%= post.date %></p>
+        </header>
+      <%}%>
+
+      <p class="post-text"><%= post.text %></p>
+      <footer>
+        <button type="button" class="modal-link likes" data-toggle="modal" data-target="#likes-<%= post.id %>"><%= post.likes.length %> likes</button>
+        <button type="button" class="modal-link comments" data-toggle="modal" data-target="#comments-<%= post.id %>"><%= post.commentNum %> comments</button>
+
+        <% if (post.user && post.user._id == user._id) { %>
+        <p style="margin: 0; margin-left: auto;"><a href="" class="modal-link edit">Edit</a><a href="" class="modal-link" id="delete-post">Delete</a></p>
+        <%} else { %>
+          <i class="<% post.likes.forEach(function(like){if(like.user._id == user._id) { %>like-on<%  };}); %> like" style="margin-left: auto">❤️</i>
+        <%}%>
+      </footer>
+    </article>
+
+
+    <div class="modal fade modal-like" data-post-id="<%= post.id %>" id="likes-<%= post.id %>" tabindex="-1" role="dialog" aria-labelledby="likes-<%= post.id %>" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Likes</h3>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+
+          </div>
+          <div class="modal-body">
+            <ul>
+              <li>
+                <table class="table table-sm table-hover table-borderless">
+                  <tbody>
+                    <% post.likes.forEach(function(like){ %>
+                      <tr data-user-id="<%= like.user._id %>">
+                        <td><% if (like.user) { %> { <%= like.user.username %><%} else {%>deleted user<%}%></td>
+                        <td align="right"><a href=""><% if (like.user) { %> { <%= like.user.email %><%} %></a></td>
+                      </tr>
+                    <% }); %>
+                  </tbody>
+                </table>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade modal-comment" data-post-id="<%= post._id %>" id="comments-<%= post._id %>" tabindex="-1" role="dialog" aria-labelledby="comments-<%= post._id %>" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Comments</h3>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body p-0">
+            <div class="comment comment-write" data-post-id="<%= post._id %>" data-comment-id="0">
+              <div class="comment-header">
+                <small>Commenting to <% if (post.user) { %> <%= post.user.username %><%} else {%>deleted user<%}%>'s post...</small>
+              </div>
+              <textarea class="form-control post-comment" id="reply" placeholder="Write your comment here" required></textarea>
+            </div>
+            <% post.comments.forEach(function(comment){ %>
+              <div class="comment" data-post-id="<%= post._id %>" data-comment-id="<%= comment._id %>">
+                <div class="comment-header">
+                  <p class="username"><% if (comment.user) { %> <%= comment.user.username %><%} else {%>deleted user<%}%></p> <small class="date"><%= comment.date %></small>
+                </div>
+                <p class="text"><%= comment.text %></p>
+                <a class="" data-comment-id="<%= comment._id %>" id="show-replies"><small><%= comment.replies.length %> replies</small></a>
+              </div>
+
+            <% comment.replies.forEach(function(reply){ %>
+            <div class="comment-reply" data-post-id="<%= post._id %>" data-comment-id="<%= comment._id %>" data-reply-id="<%= reply._id %>">
+              <div class="comment-header">
+                <p class="username"><% if (reply.user) { %> <%= reply.user.username %><%} else {%>deleted user<%}%></p> <small class="date"><%= reply.date %></small>
+              </div>
+              <p class="text"><%= reply.text %></p>
+            </div>
+              <% }); %>
+            <% }); %>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- POST END -->
+  <% }); } %>
+
+  <div class="feed-end">
+  <hr class="w-100"></hr>
+    <h4 style="min-width: -webkit-fit-content; padding: 10px 40px; text-transform: uppercase; opacity: 0.3; font-size: 18px;">That's all for now</h4>
+  <hr class="w-100"></hr>
+  </div>
+
+</div>

@@ -1,0 +1,68 @@
+<%- include('./modules/head') -%>
+<%- include('./modules/mobile-nav') -%>
+
+  <div class="frame" style="width: 100%; height: 100%;">
+    <%- include('./modules/sidebar') -%>
+
+
+    <!-- MAIN BEGIN -->
+    <div class="main">
+      <section>
+        <a onclick="window.history.back()" class="back-btn">Go back</a>
+        <h1>Profile Settings</h1>
+        <% if (typeof error !== 'undefined') { %>
+          <div class="alert alert-danger"><%= error %></div>
+        <%  } %>
+      </section>
+      <section class="mt-0 pt-0">
+        <div class="card" data-aos="fade-up">
+          <form  method="POST">
+          <div class="card-header d-flex">
+            <h3>Your Profile</h3>
+
+                <input type="submit" style="margin-left: auto; border: none;" class="save-changes" value="Save">
+
+          </div>
+          <div class="card-body">
+
+
+              <div class="form-group mb-4">
+                <label for="username">Change your username.</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Username" value="<%= user.username %>" >
+              </div>
+
+              <div class="form-group mb-4">
+                <label for="email">Change the icon of the pack.</label>
+                <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>">
+                </div>
+
+
+              <div class="form-group mb-4">
+                <label for="password">Change password.</label>
+                  <input type="password" class="form-control" id="password" name="password" >
+              </div>
+              </form>
+              <form action="/delete" method="POST">
+              <div class="form-group mb-4">
+                <label>By pressing this button, you delete your profile and all your posts.</label>
+                <button type="submit" class="btn btn-danger d-block">Delete Profile</button>
+              </div>
+
+            </form>
+              </div>
+          </div>
+
+
+      </section>
+      <%- include('./modules/footer') -%>
+    </div>
+    </div>
+    <!-- MAIN END -->
+
+  </div>
+
+<%- include('./modules/scripts') -%>
+  </script>
+</body>
+
+</html>

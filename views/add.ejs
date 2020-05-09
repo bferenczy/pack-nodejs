@@ -1,0 +1,78 @@
+<%- include('./modules/head') -%>
+<%- include('./modules/mobile-nav') -%>
+
+  <div class="frame" style="width: 100%; height: 100%;">
+    <%- include('./modules/sidebar') -%>
+
+    <!-- MAIN BEGIN -->
+    <div class="main">
+      <section>
+        <h1>Add new pack</h1>
+        <% if (typeof error !== 'undefined') { %>
+          <div class="alert alert-danger"><%= error %></div>
+        <%  } %>
+      </section>
+      <section class="mt-0 pt-0">
+        <div class="card" data-aos="fade-up">
+          <form method="POST">
+          <div class="card-header d-flex">
+            <h3>The Basics</h3>
+
+          </div>
+          <div class="card-body">
+
+
+              <div class="form-group mb-4">
+                <label for="packname">Give a name to your pack!</label>
+                <input type="text" class="form-control" id="packname" name="name" placeholder="Pack name" >
+              </div>
+
+              <div class="form-group mb-4">
+                <label for="icon">Choose an icon for your pack!</label>
+                <input type="hidden" id="icon" name="icon" value="📘">
+                <div class="center-row">
+                  <div class="chosen-icon">📘</div>
+                  <div class="icon-selector">
+                    <p>👟</p>
+                    <p>💻</p>
+                    <p>🍊</p>
+                    <p>🍾</p>
+                    <p>🌊</p>
+                    <p>❤️</p>
+                    <p>⛄️</p>
+                    <p>🥕</p>
+                    <p>💰</p>
+                    <p>🎉</p>
+                    <p>🎓</p>
+                    <p>🐶</p>
+                    <p>🌈</p>
+                    <p>🍔</p>
+                    <p>⚽️</p>
+                    <p>🏀</p>
+                    <p>💩</p>
+                    <p>🧠</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group mb-4">
+                <label for="packdesc">Describe, what the pack is for!</label>
+                <textarea class="form-control pack-desc-ta" rows="4" id="packdesc" name="description" placeholder="Insert detailed description about your pack here. You can write about the pack’s goals, purpose, or general guidance regarding posting." required></textarea>
+              </div>
+          </div>
+        </div>
+      <button type="submit" class="btn btn-primary w-100" name="add">Shall the Pack begin its journey!</button>
+    </form>
+      </section>
+<%- include('./modules/footer') -%>
+    </div>
+    </div>
+    <!-- MAIN END -->
+
+  </div>
+
+<%- include('./modules/scripts') -%>
+  </script>
+</body>
+
+</html>

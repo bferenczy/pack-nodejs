@@ -1,0 +1,116 @@
+//A bejelentkező képernyő lesz a nyitóoldal
+GET  /?hiba=rosszjelszo
+      handleWrongPasswordMW(get param vizsgalat - template-be valtozo)
+      renderMW(index.html)
+
+//Ellenőrzi a megadott email-jelszó párost
+POST /login
+      checkPassMW() sessionnel login, egyébként redirect
+
+//Megjeleníti a regisztráció oldalt, valamint az új felhasználó regisztrációját is elvégzi, ami után továbbít a dashboard-ra
+GET, POST  /register
+      saveUserMW()
+      renderMW(index.html)
+
+//Az egyszerűség kedvéért tokenek helyett egyszerűen új jelszót küld emailben
+GET, POST /forgot
+      sendPass()
+      renderMW(pwd.html)
+
+
+----------------------------------------------------------------------------------------
+
+//Megjeleníti a dashboardot, betölti a Pack-eket amikben benne vagyunk, valamin azokból a legfrissebb posztokat
+GET  /dashboard/                   -> /dashboard
+    authMW() - ha bejelentkezve, nextet hiv, egyebkent redirect
+    getPacks()
+    getFreshPosts() - posztok megjelenítése időrendi sorrendben
+
+----------------------------------------------------------------------------------------
+
+//Megjeleníti egy adott Pack oldalát, betölti a hozzá tartozó posztokat
+GET  /pack/:packid                 -> /pack/0
+    authMW()
+    getPosts()
+
+//Új Pack létrehozása
+GET,POST /pack/new                     -> add.html
+    authMW()
+    savePackMW()
+          if(typeof req.body.name === 'undefined'){
+            return next();  // GET lekérdezéskor nem csinálunk semmit!
+          }
+              ha jó: res.redirect('/pack/:packid')
+              ha nem: res.locals -> hiba van!
+
+          next();
+    renderMW(add.html)
+      - ha volt érték beküldve, a form elemek azzal töltődnek fel
+
+//Pack beállítások módosítása (az előző mintájára)
+GET, POST  /pack/:packid/settings        -> packsettings.html
+    authMW()
+    getPackMW()
+    savePackMW()
+    renderMW(packsettings.html)
+
+//Pack törlése
+GET  /pack/:packid/settings/del
+    authMW()
+    getPackMW()
+    delPackMW()
+
+//Pack elhagyása
+GET, POST  /pack/:packid/leave            -> leave.html
+    authMW()
+    getPackMW()
+    leavePackMW()
+    renderMW()
+
+//Új poszt írása egy Pack-be
+POST /pack/:packid/new
+    authMW()
+    getPackMW()
+    makePostMW()
+
+//Poszt szerkesztése - külön oldal nincs neki, ezt a Pack oldalán / dashboardon lehet megtenni!
+POST /post/:postid/edit
+    authMW()
+    getPostMW()
+    savePostMW()
+
+//Poszt törlése - külön oldal nincs neki (ezért nincs ilyen URI-val GET), ezt a Pack oldalán / dashboardon lehet megtenni!
+GET  /post/:postid/del      -> poszt törlése
+    authMW()
+    getPostMW()
+    delPostMW()
+
+----------------------------------------------------------------------------------------
+
+//Komment írása egy posztra - külön oldal nincs neki (ezért nincs ilyen URI-val GET), ezt a Pack oldalán / dashboardon lehet megtenni!
+POST /post/:postid/newcomment
+    authMW()
+    getPostMW()
+    makeCommentMW()
+
+//Válaszolás egy kommentre, reply írás - külön oldal nincs neki (ezért nincs ilyen URI-val GET), ezt a Pack oldalán / dashboardon lehet megtenni!
+POST /comment/:commentid/newreply  -> válaszolás egy kommentre
+    authMW()
+    getCommentMW()
+    makeReplyMW()
+
+
+----------------------------------------------------------------------------------------
+
+//Felhasználói adatok módosítása (jelszó, username, email cím...)
+GET, POST  /:userid
+    authMW()
+    getUserMW()
+    saveUserMW()
+    renderMW(user.html)
+
+//Felhasználó törlése
+GET  /:userid/del                  -> user törlése
+    authMW()
+    getUserMW()
+    delUserMW()

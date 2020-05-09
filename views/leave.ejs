@@ -1,0 +1,43 @@
+<%- include('modules/head') -%>
+<%- include('./modules/mobile-nav') -%>
+
+  <div class="frame" style="width: 100%; height: 100%;">
+    <%- include('./modules/sidebar') -%>
+
+
+    <!-- MAIN BEGIN -->
+    <div class="main">
+      <section>
+        <a onclick="window.history.back()" class="back-btn">Go back</a>
+        <h1 class="p-2">Leaving Pack</h1>
+        <div class="card mt-3">
+          <div class="card-header mb-2">
+            <h3>Are you sure you want to leave this pack?</h3>
+          </div>
+          <div class="card-body">
+            <h4 class="mb-3"><%= pack.icon %> <%= pack.name %></h4>
+            <h5 style="font-size: 16px; opacity: 0.4">Description</h5>
+            <p class="mb-2"><%= pack.description %></p>
+            <small><% if( packOwner) { %> <%= packOwner.username %><%} else { %>deleted user<%}%></small>
+          </div>
+          <div class="card-actions d-flex">
+            <form action="/confirm-leave/<%= pack._id %>" method="POST" class="w-100" >
+              <input type="submit" class="btn btn-primary w-100" style="border-radius: 0;" value="Yes, I want to leave">
+          </form>
+            <a onclick="window.history.back()" class="btn btn-danger" style="border-radius: 0;">Cancel</a>
+          </div>
+        </div>
+
+
+      </section>
+
+    <%- include('./modules/footer') -%>
+    </div>
+    <!-- MAIN END -->
+
+  </div>
+
+<%- include('./modules/scripts') -%>
+</body>
+
+</html>
