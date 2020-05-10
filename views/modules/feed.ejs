@@ -61,8 +61,8 @@
                   <tbody>
                     <% post.likes.forEach(function(like){ %>
                       <tr data-user-id="<%= like.user._id %>">
-                        <td><% if (like.user) { %> { <%= like.user.username %><%} else {%>deleted user<%}%></td>
-                        <td align="right"><a href=""><% if (like.user) { %> { <%= like.user.email %><%} %></a></td>
+                        <td><% if (like.user) { %> <%= like.user.username %><%} else {%>deleted user<%}%></td>
+                        <td align="right"><a href=""><% if (like.user) { %> <%= like.user.email %><%} %></a></td>
                       </tr>
                     <% }); %>
                   </tbody>
